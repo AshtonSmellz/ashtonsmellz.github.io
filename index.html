@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Castle Flowchart</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" />
+  <style>
+    #network {
+      width: 100%;
+      height: 100vh;
+      border: 1px solid lightgray;
+    }
+  </style>
+</head>
+<body>
+  <div id="network"></div>
+  <script>
+    const categoryColor = "#ffd699";
+    const roomColor = "#d2e5ff";
+    const throneColor = "#f7a8a8";
+    const outsideColor = "#a8d5ba";
+
+    const nodes = new vis.DataSet([
+      { id: 1, label: "Outside", color: outsideColor },
+      { id: 2, label: "Throne Room", color: throneColor },
+      { id: 3, label: "Royal Wing", color: categoryColor },
+      { id: 4, label: "Arcane Wing", color: categoryColor },
+      { id: 5, label: "Living Quarters", color: categoryColor },
+      { id: 6, label: "Military Wing", color: categoryColor },
+      { id: 7, label: "Service Wing", color: categoryColor },
+      { id: 8, label: "Cultural Wing", color: categoryColor },
+      { id: 9, label: "Courtyard", color: roomColor },
+      { id: 10, label: "Greenhouse", color: roomColor },
+      { id: 11, label: "Hidden Water Cave", color: roomColor },
+      { id: 12, label: "Map Rooms", color: roomColor },
+      { id: 13, label: "Lounge Rooms", color: roomColor },
+      { id: 14, label: "Trophy Room", color: roomColor },
+      { id: 15, label: "Personal Kitchen", color: roomColor },
+      { id: 16, label: "Servants Kitchen", color: roomColor },
+      { id: 17, label: "Tapestry Room", color: roomColor },
+      { id: 18, label: "Scrying Mirror Room", color: roomColor },
+      { id: 19, label: "Library", color: roomColor },
+      { id: 20, label: "Archive Rooms", color: roomColor },
+      { id: 21, label: "Magic Laboratory", color: roomColor },
+      { id: 22, label: "Deactivated Portal Room", color: roomColor },
+      { id: 23, label: "Astronomy Tower", color: roomColor },
+      { id: 24, label: "Disused Housing", color: roomColor },
+      { id: 25, label: "Disused Offices", color: roomColor },
+      { id: 26, label: "Disused Classrooms", color: roomColor },
+      { id: 27, label: "Large Bathrooms", color: roomColor },
+      { id: 28, label: "Mess Hall", color: roomColor },
+      { id: 29, label: "Hospital Wing", color: roomColor },
+      { id: 30, label: "Medicinal Laboratory", color: roomColor },
+      { id: 31, label: "Bath House / Sauna", color: roomColor },
+      { id: 32, label: "Inside Training Area", color: roomColor },
+      { id: 33, label: "Outside Training Area", color: roomColor },
+      { id: 34, label: "Blacksmith Workshop", color: roomColor },
+      { id: 35, label: "Carpentry Workshop", color: roomColor },
+      { id: 36, label: "Clock Tower", color: roomColor },
+      { id: 37, label: "Emergency Bell Tower", color: roomColor },
+      { id: 38, label: "Bird Messenger Tower", color: roomColor },
+      { id: 39, label: "Horse Carriage Storage", color: roomColor },
+      { id: 40, label: "Horse Stables", color: roomColor },
+      { id: 41, label: "Theater", color: roomColor }
+    ]);
+
+    const edges = new vis.DataSet([
+      { from: 1, to: 2 },
+      { from: 2, to: 3 }, { from: 2, to: 4 }, { from: 2, to: 5 },
+      { from: 2, to: 6 }, { from: 2, to: 7 }, { from: 2, to: 8 },
+      { from: 5, to: 9 }, { from: 9, to: 10 }, { from: 9, to: 11 },
+      { from: 3, to: 12 }, { from: 3, to: 13 }, { from: 3, to: 14 },
+      { from: 3, to: 15 }, { from: 3, to: 16 }, { from: 3, to: 17 },
+      { from: 3, to: 18 }, { from: 3, to: 19 }, { from: 3, to: 20 },
+      { from: 4, to: 21 }, { from: 4, to: 22 }, { from: 4, to: 23 },
+      { from: 4, to: 10 }, { from: 4, to: 18 },
+      { from: 5, to: 24 }, { from: 5, to: 25 }, { from: 5, to: 26 },
+      { from: 5, to: 27 }, { from: 5, to: 28 }, { from: 5, to: 29 },
+      { from: 5, to: 30 }, { from: 5, to: 31 },
+      { from: 6, to: 32 }, { from: 6, to: 33 }, { from: 6, to: 34 },
+      { from: 6, to: 35 }, { from: 6, to: 36 }, { from: 6, to: 37 },
+      { from: 6, to: 38 },
+      { from: 7, to: 39 }, { from: 7, to: 40 }, { from: 7, to: 16 },
+      { from: 7, to: 28 }, { from: 7, to: 31 },
+      { from: 8, to: 41 }, { from: 8, to: 13 }, { from: 8, to: 17 }
+    ]);
+
+    const container = document.getElementById("network");
+    const data = { nodes, edges };
+    const options = {
+      layout: {
+        improvedLayout: true
+      },
+      physics: {
+        enabled: true,
+        barnesHut: {
+          gravitationalConstant: -8000,
+          centralGravity: 0.3,
+          springLength: 95,
+          springConstant: 0.04,
+          damping: 0.09,
+          avoidOverlap: 0.5
+        },
+        stabilization: {
+          iterations: 200
+        }
+      },
+      edges: {
+        arrows: "to",
+        smooth: {
+          type: "dynamic"
+        }
+      },
+      nodes: {
+        shape: "box",
+        font: {
+          face: "monospace",
+          size: 14
+        }
+      }
+    };
+
+    new vis.Network(container, data, options);
+  </script>
+</body>
+</html>
